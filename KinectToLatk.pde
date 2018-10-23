@@ -1,74 +1,76 @@
-import peasy.PeasyCam;
+//import peasy.PeasyCam;
 
-PeasyCam cam;
+//PeasyCam cam;
 Latk latk;
 PImage depthImg, rgbImg;
+PGraphics depthBuffer, rgbBuffer;
 
-String fileName = "sharkMovie2.mp4";
-String fileNameNoExt = "";
 String filePath = "render";
 
-int lastFrameTime = 0;
 boolean ready = true;
+Settings settings;
 
 void setup() {
-  size(800, 600, P3D);
+  size(640, 480, P2D);
+  settings = new Settings("settings.txt");
   
-  setupMoviePlayer(fileName);
-  fileNameNoExt = getFileNameNoExt(fileName);
+  rgbImg = createImage(640, 480, RGB);
+  depthImg = createImage(640, 480, RGB);
+  rgbBuffer = createGraphics(128, 96, P2D);
+  depthBuffer = createGraphics(128, 96, P2D);
   
-  cam = new PeasyCam(this, 100);
+  imageMode(CORNER);
+  rgbBuffer.imageMode(CORNER);
+  depthBuffer.imageMode(CORNER);
+  
+  //cam = new PeasyCam(this, 100);
   latk = new Latk();  
-  float fov = PI/3.0;
-  float cameraZ = (height/2.0) / tan(fov/2.0);
-  perspective(fov, float(width)/float(height), cameraZ/100.0, cameraZ*100.0);
+  //float fov = PI/3.0;
+  //float cameraZ = (height/2.0) / tan(fov/2.0);
+  //perspective(fov, float(width)/float(height), cameraZ/100.0, cameraZ*100.0);
   
   setupShaders();
+  fileSetup();
 }
 
-void draw() {
-  background(0);
+void draw() { 
+  rgbImg = img.get(640, 120, 640, 480);
+  depthImg = img.get(0, 120, 640, 480);
+  
+  rgbBuffer.beginDraw();  
+  rgbBuffer.image(rgbImg, 0, 0, rgbBuffer.width, rgbBuffer.height);
+  rgbBuffer.endDraw();
 
-  if (ready && millis() > lastFrameTime + int((1.0/latk.fps) * 1000)) {
-    rgbImg = moviePlayer[0].movie.get(640, 120, 1280, 600);
-    depthImg = moviePlayer[0].movie.get(0, 120, 640, 600);
-    rgbImg.loadPixels();
-    depthImg.loadPixels();
-    
-    int strokeLength = 50;
-    int downRes = 10;
+  depthBuffer.beginDraw();
+  depthBuffer.image(depthImg, 0, 0, depthBuffer.width, depthBuffer.height);
+  depthBuffer.endDraw();
+
+  rgbBuffer.loadPixels();
+  depthBuffer.loadPixels();
+  
+  image(rgbBuffer,0,0);
+  image(depthBuffer,rgbBuffer.width,0);
+  
+  LatkFrame frame = new LatkFrame();
+  int strokeSize = 40;
+  
+  for (int y = 0; y < rgbBuffer.height; y++) {
     ArrayList<PVector> p = new ArrayList<PVector>();
-    color col = color(255);
-    LatkFrame frame = new LatkFrame();
-    for (int x = 0; x < rgbImg.width; x += downRes) {
-      for (int y = 0; y < rgbImg.height; y += downRes) {
-        int loc = x + y * rgbImg.width;
-        loc = constrain(loc, 0, depthImg.pixels.length-1);
-        p.add(new PVector(float(x)/float(rgbImg.width), float(y)/float(rgbImg.height), red(depthImg.pixels[loc])/float(255)));
-        
-        if (p.size() == 1) {
-          col = rgbImg.pixels[loc];
-        } else if (p.size() >= strokeLength) {
-          LatkStroke stroke = new LatkStroke(p, col);
-          frame.strokes.add(stroke);
-          p = new ArrayList<PVector>();
-        }
+    for (int x = 0; x < rgbBuffer.width; x++) {
+      int loc = x + y * rgbBuffer.width;
+      color col = rgbBuffer.pixels[loc];
+      
+      float z = red(depthBuffer.pixels[loc]);
+      p.add(new PVector(float(x) / float(rgbBuffer.width), float(y) / float(rgbBuffer.height), z / 255.0));
+      if (p.size() >= strokeSize) {
+        LatkStroke stroke = new LatkStroke(p, col);
+        frame.strokes.add(stroke);
+        p = new ArrayList<PVector>();
       }
     }
-
-    latk.layers.get(0).frames.add(frame);
-    lastFrameTime = millis();
   }
-  
-  latk.run();
-}
 
-String getFileNameNoExt(String s) {
-  String returns = "";
-  String[] temp = s.split(".");
-  for (int i=0; i<temp.length-1; i++) {
-    returns += temp[i];
-  }
-  return returns;
+  latk.layers.get(0).frames.add(frame);
+    
+  fileLoop();
 }
-  

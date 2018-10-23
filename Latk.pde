@@ -1,3 +1,10 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 class Latk {
   
   JSONObject json;
@@ -218,9 +225,23 @@ class Latk {
         s.add("    ]");
         s.add("}");
 
-        String url = fileName;
-
-        saveStrings(url, s.toArray(new String[s.size()]));
+        String url = sketchPath("") + fileName;
+        //saveStrings(url, s.toArray(new String[s.size()]));
+                
+        try {
+          File f = new File(url + ".latk");
+          ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
+          ZipEntry e = new ZipEntry(fileName + ".json");
+          out.putNextEntry(e);
+          
+          byte[] data = String.join("\n", s.toArray(new String[s.size()])).getBytes();
+          out.write(data, 0, data.length);
+          out.closeEntry();
+          
+          out.close();
+        } catch (Exception e) {
+          //
+        }
     }
 
 }
