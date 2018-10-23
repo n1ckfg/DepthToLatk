@@ -79,7 +79,7 @@ void draw() {
       color col = rgbBuffer.pixels[loc];
       float z = red(depthBuffer.pixels[loc]);
       
-      p.add(new PVector(float(x) / float(rgbBuffer.width), float(y) / float(rgbBuffer.height), z / 255.0));
+      p.add(new PVector(float(x) / float(rgbBuffer.width), 1.0 - (float(y) / float(rgbBuffer.width)), 1.0 - (z / 255.0)));
       if (p.size() >= strokeLength) {
         LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
         frame.strokes.add(stroke);

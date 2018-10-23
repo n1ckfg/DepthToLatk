@@ -5,7 +5,7 @@ Points High
 48
 
 Stroke Length
-10
+5
 
 Palette Colors
-16
+32

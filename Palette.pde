@@ -94,7 +94,6 @@ class Palette {
     for (int i=0; i<distances.length; i++) {
       PVector d1 = new PVector(red(c), green(c), blue(c));
       PVector d2 = new PVector(red(colors[i]), green(colors[i]), blue(colors[i]));
-      println(d1 + " " + d2);
       distances[i] = PVector.dist(d1, d2);
     }
         
