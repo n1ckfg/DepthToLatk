@@ -9,6 +9,9 @@ String filePath = "render";
 int pointsWide = 128;
 int pointsHigh = 96;
 int strokeLength = 40;
+int paletteColors = 16;
+
+Palette palette;
 
 boolean ready = true;
 Settings settings;
@@ -16,6 +19,8 @@ Settings settings;
 void setup() {
   size(640, 480, P2D);
   settings = new Settings("settings.txt");
+  
+  palette = new Palette(paletteColors);
   
   rgbImg = createImage(640, 480, RGB);
   depthImg = createImage(640, 480, RGB);
@@ -60,7 +65,7 @@ void draw() {
     ArrayList<PVector> p = new ArrayList<PVector>();
     for (int x = 0; x < rgbBuffer.width; x++) {
       int loc = x + y * rgbBuffer.width;
-      color col = rgbBuffer.pixels[loc];
+      color col = palette.addColor(rgbBuffer.pixels[loc]);
       
       float z = red(depthBuffer.pixels[loc]);
       p.add(new PVector(float(x) / float(rgbBuffer.width), float(y) / float(rgbBuffer.height), z / 255.0));

@@ -6,3 +6,6 @@ Points High
 
 Stroke Length
 10
+
+Palette Colors
+16
