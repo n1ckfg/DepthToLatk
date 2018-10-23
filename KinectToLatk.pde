@@ -15,6 +15,7 @@ Palette palette;
 
 boolean ready = true;
 Settings settings;
+boolean sampleDone = false;
 
 void setup() {
   size(640, 480, P2D);
@@ -42,13 +43,22 @@ void setup() {
 }
 
 void draw() { 
+  if (palette.img != null) {
+    image(palette.img, 0, 0, width, height);
+  }
+  
   rgbImg = img.get(640, 120, 640, 480);
   depthImg = img.get(0, 120, 640, 480);
-  
+    
   rgbBuffer.beginDraw();  
   rgbBuffer.image(rgbImg, 0, 0, rgbBuffer.width, rgbBuffer.height);
   rgbBuffer.endDraw();
 
+  if (!sampleDone) {
+    palette.sample(rgbBuffer);
+    sampleDone = true;
+  }
+  
   depthBuffer.beginDraw();
   depthBuffer.image(depthImg, 0, 0, depthBuffer.width, depthBuffer.height);
   depthBuffer.endDraw();
@@ -65,12 +75,13 @@ void draw() {
     ArrayList<PVector> p = new ArrayList<PVector>();
     for (int x = 0; x < rgbBuffer.width; x++) {
       int loc = x + y * rgbBuffer.width;
-      color col = palette.addColor(rgbBuffer.pixels[loc]);
       
+      color col = rgbBuffer.pixels[loc];
       float z = red(depthBuffer.pixels[loc]);
+      
       p.add(new PVector(float(x) / float(rgbBuffer.width), float(y) / float(rgbBuffer.height), z / 255.0));
       if (p.size() >= strokeLength) {
-        LatkStroke stroke = new LatkStroke(p, col);
+        LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
         frame.strokes.add(stroke);
         p = new ArrayList<PVector>();
       }
