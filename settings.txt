@@ -1,32 +1,8 @@
-Holoflix Mode
-false
+Points Wide
+64
 
-Movie Mode
-false
+Points High
+48
 
-Inpainting Threshold
-50
-
-Blur Amount
-1
-
-Holoflix Source Image Width
-640
-
-Holoflix Source Image Height
-480
-
-Holoflix Source Image Letterbox Height
-120
-
-Holoflix Dest Image Width
-512
-
-Holoflix Dest Image Height
-424
-
-Do Inpainting
-false
-
-Do Color Depth Map
-true
+Stroke Length
+10

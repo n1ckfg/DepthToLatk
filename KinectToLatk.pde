@@ -4,8 +4,11 @@
 Latk latk;
 PImage depthImg, rgbImg;
 PGraphics depthBuffer, rgbBuffer;
-
 String filePath = "render";
+
+int pointsWide = 128;
+int pointsHigh = 96;
+int strokeLength = 40;
 
 boolean ready = true;
 Settings settings;
@@ -16,8 +19,8 @@ void setup() {
   
   rgbImg = createImage(640, 480, RGB);
   depthImg = createImage(640, 480, RGB);
-  rgbBuffer = createGraphics(128, 96, P2D);
-  depthBuffer = createGraphics(128, 96, P2D);
+  rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
+  depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   
   imageMode(CORNER);
   rgbBuffer.imageMode(CORNER);
@@ -52,7 +55,6 @@ void draw() {
   image(depthBuffer,rgbBuffer.width,0);
   
   LatkFrame frame = new LatkFrame();
-  int strokeSize = 40;
   
   for (int y = 0; y < rgbBuffer.height; y++) {
     ArrayList<PVector> p = new ArrayList<PVector>();
@@ -62,7 +64,7 @@ void draw() {
       
       float z = red(depthBuffer.pixels[loc]);
       p.add(new PVector(float(x) / float(rgbBuffer.width), float(y) / float(rgbBuffer.height), z / 255.0));
-      if (p.size() >= strokeSize) {
+      if (p.size() >= strokeLength) {
         LatkStroke stroke = new LatkStroke(p, col);
         frame.strokes.add(stroke);
         p = new ArrayList<PVector>();

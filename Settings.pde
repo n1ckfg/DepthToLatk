@@ -11,7 +11,9 @@ class Settings {
     try {
       data = loadStrings(_s);
       for (int i=0;i<data.length;i++) {
-
+        if (data[i].equals("Points Wide")) pointsWide = setInt(data[i+1]);
+        if (data[i].equals("Points High")) pointsHigh = setInt(data[i+1]);
+        if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
 
         //if (data[i].equals("Example Int Setting")) exampleInt = setInt(data[i+1]);
         //if (data[i].equals("Example Float Setting")) exampleFloat = setFloat(data[i+1]);
