@@ -1,17 +1,20 @@
 Points Wide
-64
+100
 
 Points High
-48
+100
 
 Stroke Length
-5
+4
 
 Palette Colors
-32
+64
 
 Stroke Noise
 0.4
 
 Shuffle Odds
-0.1
+0.2
+
+Far Clip
+90

@@ -13,6 +13,7 @@ int curStrokeLength = strokeLength;
 int paletteColors = 16;
 float strokeNoise = 0.3;
 float shuffleOdds = 0.1;
+float farClip = 5;
 
 Palette palette;
 
@@ -37,9 +38,9 @@ void setup() {
   rgbBuffer.imageMode(CORNER);
   depthBuffer.imageMode(CORNER);
   
-  for (int i = 0; i < depthLookUp.length; i++) {
-    depthLookUp[i] = rawDepthToMeters(i);
-  }
+  //for (int i = 0; i < depthLookUp.length; i++) {
+    //depthLookUp[i] = rawDepthToMeters(i);
+  //}
 
   //cam = new PeasyCam(this, 100);
   latk = new Latk();  
@@ -91,7 +92,10 @@ void draw() {
       float xx = float(x) + random(-strokeNoise, strokeNoise);
       float yy = float(y) + random(-strokeNoise, strokeNoise);
       
-      p.add(new PVector(xx / float(rgbBuffer.width), 1.0 - (yy / float(rgbBuffer.width)), 1.0 - (z / 255.0)));
+      if (z >= farClip) {
+        p.add(new PVector(xx / float(rgbBuffer.width), 1.0 - (yy / float(rgbBuffer.width)), 1.0 - (z / 255.0)));
+      }
+      
       if (p.size() >= curStrokeLength) {
         curStrokeLength = int(random(strokeLength/2, strokeLength*2));
         if (random(1) < shuffleOdds) Collections.shuffle(p);
