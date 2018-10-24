@@ -15,6 +15,8 @@ class Settings {
         if (data[i].equals("Points High")) pointsHigh = setInt(data[i+1]);
         if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
         if (data[i].equals("Palette Colors")) paletteColors = setInt(data[i+1]);
+        if (data[i].equals("Stroke Noise")) strokeNoise = setFloat(data[i+1]);
+        if (data[i].equals("Shuffle Odds")) shuffleOdds = setFloat(data[i+1]);
 
         //if (data[i].equals("Example Int Setting")) exampleInt = setInt(data[i+1]);
         //if (data[i].equals("Example Float Setting")) exampleFloat = setFloat(data[i+1]);

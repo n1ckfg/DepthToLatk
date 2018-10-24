@@ -9,3 +9,9 @@ Stroke Length
 
 Palette Colors
 32
+
+Stroke Noise
+0.4
+
+Shuffle Odds
+0.1

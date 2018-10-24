@@ -9,13 +9,18 @@ String filePath = "render";
 int pointsWide = 128;
 int pointsHigh = 96;
 int strokeLength = 40;
+int curStrokeLength = strokeLength;
 int paletteColors = 16;
+float strokeNoise = 0.3;
+float shuffleOdds = 0.1;
 
 Palette palette;
 
 boolean ready = true;
 Settings settings;
 boolean sampleDone = false;
+
+float[] depthLookUp = new float[2048];
 
 void setup() {
   size(640, 480, P2D);
@@ -32,6 +37,10 @@ void setup() {
   rgbBuffer.imageMode(CORNER);
   depthBuffer.imageMode(CORNER);
   
+  for (int i = 0; i < depthLookUp.length; i++) {
+    depthLookUp[i] = rawDepthToMeters(i);
+  }
+
   //cam = new PeasyCam(this, 100);
   latk = new Latk();  
   //float fov = PI/3.0;
@@ -79,8 +88,13 @@ void draw() {
       color col = rgbBuffer.pixels[loc];
       float z = red(depthBuffer.pixels[loc]);
       
-      p.add(new PVector(float(x) / float(rgbBuffer.width), 1.0 - (float(y) / float(rgbBuffer.width)), 1.0 - (z / 255.0)));
-      if (p.size() >= strokeLength) {
+      float xx = float(x) + random(-strokeNoise, strokeNoise);
+      float yy = float(y) + random(-strokeNoise, strokeNoise);
+      
+      p.add(new PVector(xx / float(rgbBuffer.width), 1.0 - (yy / float(rgbBuffer.width)), 1.0 - (z / 255.0)));
+      if (p.size() >= curStrokeLength) {
+        curStrokeLength = int(random(strokeLength/2, strokeLength*2));
+        if (random(1) < shuffleOdds) Collections.shuffle(p);
         LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
         frame.strokes.add(stroke);
         p = new ArrayList<PVector>();
@@ -91,4 +105,11 @@ void draw() {
   latk.layers.get(0).frames.add(frame);
     
   fileLoop();
+}
+
+float rawDepthToMeters(int depthValue) {
+  if (depthValue < 2047) {
+    return (float)(1.0 / ((double)(depthValue) * -0.0030711016 + 3.3309495161));
+  }
+  return 0.0f;
 }
