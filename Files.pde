@@ -120,7 +120,7 @@ void saveGraphics(PGraphics pg,boolean last){
     println("Failed to save file.");  
   }
   if(last) {
-    latk.write("test");
+    latk.write("output.latk");
     openAppFolderHandler();
     exit();
   }
