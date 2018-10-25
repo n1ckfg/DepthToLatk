@@ -5,7 +5,7 @@ Points High
 100
 
 Stroke Length
-4
+10
 
 Palette Colors
 64
@@ -17,4 +17,7 @@ Shuffle Odds
 0.2
 
 Far Clip
-90
+10
+
+Layout Mode
+HOLOFLIX

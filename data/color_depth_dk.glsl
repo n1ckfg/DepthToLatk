@@ -58,14 +58,15 @@ float map(float val, float min1, float max1, float min2, float max2) {
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	vec2 uv = fragCoord.xy / iResolution.xy;
-	vec2 uv2 = vec2(uv.x, abs(1.0 - uv.y));
+	//vec2 uv2 = vec2(uv.x, abs(1.0 - uv.y));
 
-	vec3 hslCol = rgb2hsl(texture2D(tex0, uv2).xyz);
+	vec3 hslCol = rgb2hsl(texture2D(tex0, uv).xyz);
 	float depth = 1.0 - hslCol.x;
 	float mask = hslCol.z;
 	//float threshold = 0.04;
 	//if (mask < threshold) depth = mask;
 	//depth = map(depth, 32.0/255.0, 200.0/255.0, 0.0, 1.0);
+	if (depth > 0.99) depth = 0.0;
 	vec4 col = vec4(depth, depth, depth, 1.0); 
 
 	fragColor = col;

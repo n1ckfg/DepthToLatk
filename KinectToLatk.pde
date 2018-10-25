@@ -5,6 +5,7 @@ Latk latk;
 PImage depthImg, rgbImg;
 PGraphics depthBuffer, rgbBuffer;
 String filePath = "render";
+LayoutMode layoutMode;
 
 int pointsWide = 128;
 int pointsHigh = 96;
@@ -25,12 +26,19 @@ float[] depthLookUp = new float[2048];
 
 void setup() {
   size(640, 480, P2D);
+  layoutMode = LayoutMode.HOLOFLIX;
+  
   settings = new Settings("settings.txt");
   
   palette = new Palette(paletteColors);
   
-  rgbImg = createImage(640, 480, RGB);
-  depthImg = createImage(640, 480, RGB);
+  if (layoutMode == LayoutMode.HOLOFLIX) {
+    rgbImg = createImage(640, 480, RGB);
+    depthImg = createImage(640, 480, RGB);
+  } else if (layoutMode == LayoutMode.RGBDTK) {
+    rgbImg = createImage(512, 424, RGB);
+    depthImg = createImage(512, 424, RGB);
+  }
   rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   
@@ -57,9 +65,14 @@ void draw() {
     image(palette.img, 0, 0, width, height);
   }
   
-  rgbImg = img.get(640, 120, 640, 480);
-  depthImg = img.get(0, 120, 640, 480);
-    
+  if (layoutMode == LayoutMode.HOLOFLIX) {
+    rgbImg = img.get(640, 120, 640, 480);
+    depthImg = img.get(0, 120, 640, 480);
+  } else if (layoutMode == LayoutMode.RGBDTK) {
+    rgbImg = img.get(0, 0, 512, 424);
+    depthImg = img.get(0, 424, 512, 424);
+  }
+  
   rgbBuffer.beginDraw();  
   rgbBuffer.image(rgbImg, 0, 0, rgbBuffer.width, rgbBuffer.height);
   rgbBuffer.endDraw();
@@ -73,6 +86,13 @@ void draw() {
   depthBuffer.image(depthImg, 0, 0, depthBuffer.width, depthBuffer.height);
   depthBuffer.endDraw();
 
+  if (layoutMode == LayoutMode.RGBDTK) {
+    depthBuffer.beginDraw();
+    shaderSetTexture(shader_color_depth, "tex0", depthBuffer);
+    depthBuffer.filter(shader_color_depth);
+    depthBuffer.endDraw();
+  }
+  
   rgbBuffer.loadPixels();
   depthBuffer.loadPixels();
   

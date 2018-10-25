@@ -1,0 +1,6 @@
+enum LayoutMode {
+  
+  HOLOFLIX,
+  RGBDTK
+
+}

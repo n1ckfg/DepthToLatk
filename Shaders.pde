@@ -1,13 +1,11 @@
-PShader shader_depth_color, shader_color_depth;
+PShader shader_color_depth;
 
 PVector shaderMousePos = new PVector(0,0);
 PVector shaderMouseClick = new PVector(0,0);
 
 void setupShaders() {
-  shader_depth_color = loadShader("depth_color.glsl"); 
-  shader_color_depth = loadShader("color_depth.glsl"); 
-  shaderSetSize(shader_depth_color, 640, 480);
-  shaderSetSize(shader_color_depth, 640, 480);
+  shader_color_depth = loadShader("color_depth_dk.glsl"); 
+  shaderSetSize(shader_color_depth, depthBuffer.width, depthBuffer.height);
 }
 
 void updateShaders() {
