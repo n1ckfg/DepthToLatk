@@ -8,16 +8,16 @@ Palette Colors
 64
 
 Far Clip
-10
+100
 
 Stroke Length
-40
+10
 
 Layout Mode
 HOLOFLIX
 
 Render Mode
-GRID
+CONTOUR
 
 Grid Stroke Noise
 0.4
@@ -26,7 +26,7 @@ Grid Shuffle Odds
 0.2
 
 Contour Approximation
-0.1
+0.05
 
 Contour Min Area
 20.0

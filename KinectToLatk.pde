@@ -121,7 +121,7 @@ void draw() {
       for (int x = 0; x < rgbBuffer.width; x++) {
         int loc = x + y * rgbBuffer.width;
         
-        color col = rgbBuffer.pixels[loc];
+        color col = palette.getNearest(rgbBuffer.pixels[loc]);
         float z = red(depthBuffer.pixels[loc]);
         
         float xx = float(x) + random(-strokeNoise, strokeNoise);
