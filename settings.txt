@@ -4,20 +4,32 @@ Points Wide
 Points High
 100
 
-Stroke Length
-10
-
 Palette Colors
 64
-
-Stroke Noise
-0.4
-
-Shuffle Odds
-0.2
 
 Far Clip
 10
 
+Stroke Length
+40
+
 Layout Mode
 HOLOFLIX
+
+Render Mode
+GRID
+
+Grid Stroke Noise
+0.4
+
+Grid Shuffle Odds
+0.2
+
+Contour Approximation
+0.1
+
+Contour Min Area
+20.0
+
+Contour Slices
+30

@@ -13,11 +13,10 @@ class Settings {
       for (int i=0;i<data.length;i++) {
         if (data[i].equals("Points Wide")) pointsWide = setInt(data[i+1]);
         if (data[i].equals("Points High")) pointsHigh = setInt(data[i+1]);
-        if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
         if (data[i].equals("Palette Colors")) paletteColors = setInt(data[i+1]);
-        if (data[i].equals("Stroke Noise")) strokeNoise = setFloat(data[i+1]);
-        if (data[i].equals("Shuffle Odds")) shuffleOdds = setFloat(data[i+1]);
         if (data[i].equals("Far Clip")) farClip = setFloat(data[i+1]);
+        if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
+
         if (data[i].equals("Layout Mode")) {
             if (data[i+1].equals("HOLOFLIX")) {
               layoutMode = LayoutMode.HOLOFLIX;
@@ -25,6 +24,21 @@ class Settings {
               layoutMode = LayoutMode.RGBDTK;
             }
         }
+        if (data[i].equals("Render Mode")) {
+            if (data[i+1].equals("GRID")) {
+              renderMode = RenderMode.GRID;
+            } else if (data[i+1].equals("CONTOUR")) {
+              renderMode = RenderMode.CONTOUR;
+            }
+        }
+        
+        if (data[i].equals("Grid Stroke Noise")) strokeNoise = setFloat(data[i+1]);
+        if (data[i].equals("Grid Shuffle Odds")) shuffleOdds = setFloat(data[i+1]);
+        
+        if (data[i].equals("Contour Approximation")) approx = setFloat(data[i+1]);
+        if (data[i].equals("Contour Min Area")) minArea = setFloat(data[i+1]);
+        if (data[i].equals("Contour Slices")) numSlices = setInt(data[i+1]);          
+        
         //if (data[i].equals("Example Int Setting")) exampleInt = setInt(data[i+1]);
         //if (data[i].equals("Example Float Setting")) exampleFloat = setFloat(data[i+1]);
         //if (data[i].equals("Example String Setting")) exampleString = setString(data[i+1]);
