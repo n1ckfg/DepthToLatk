@@ -1,10 +1,11 @@
-PShader shader_color_depth;
+PShader shader_color_depth, shader_color_depth_flip;
 
 PVector shaderMousePos = new PVector(0,0);
 PVector shaderMouseClick = new PVector(0,0);
 
 void setupShaders() {
-  shader_color_depth = loadShader("color_depth_dk.glsl"); 
+  shader_color_depth = loadShader("color_depth.glsl"); 
+  shader_color_depth_flip = loadShader("color_depth_flip.glsl"); 
   shaderSetSize(shader_color_depth, depthBuffer.width, depthBuffer.height);
 }
 
@@ -51,4 +52,14 @@ void shaderMouseReleased() {
 
 void shaderSetTexture(PShader ps, String name, PImage tex) {
   ps.set(name, tex);
+}
+
+PImage shaderApplyEffect(PShader ps, PImage img) {
+  PGraphics temp = createGraphics(img.width, img.height, P2D);
+  temp.beginDraw();
+  shaderSetSize(ps, img.width, img.height);
+  shaderSetTexture(ps, "tex0", img);
+  temp.filter(ps);
+  temp.endDraw();
+  return temp.get();
 }

@@ -14,7 +14,7 @@ Stroke Length
 10
 
 Layout Mode
-HOLOFLIX
+RGBDTK
 
 Render Mode
 CONTOUR

@@ -99,10 +99,16 @@ void draw() {
   depthBuffer.endDraw();
 
   if (layoutMode == LayoutMode.RGBDTK) {
-    depthBuffer.beginDraw();
-    shaderSetTexture(shader_color_depth, "tex0", depthBuffer);
-    depthBuffer.filter(shader_color_depth);
-    depthBuffer.endDraw();
+    if (renderMode == RenderMode.GRID) {
+      depthBuffer.beginDraw();
+      shaderSetTexture(shader_color_depth, "tex0", depthBuffer);
+      depthBuffer.filter(shader_color_depth);
+      depthBuffer.endDraw();
+      depthBuffer.save("test.png");
+    } else if (renderMode == RenderMode.CONTOUR) {
+      depthImg = shaderApplyEffect(shader_color_depth_flip, depthImg);
+      depthImg.save("test.png");
+    }
   }
   
   rgbImg.loadPixels();
