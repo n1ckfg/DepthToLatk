@@ -8,7 +8,7 @@ Palette Colors
 64
 
 Far Clip
-100
+1
 
 Stroke Length
 10

@@ -107,7 +107,7 @@ void draw() {
       depthBuffer.save("test.png");
     } else if (renderMode == RenderMode.CONTOUR) {
       depthImg = shaderApplyEffect(shader_color_depth_flip, depthImg);
-      depthImg.save("test.png");
+      //depthImg.save("test.png");
     }
   }
   
