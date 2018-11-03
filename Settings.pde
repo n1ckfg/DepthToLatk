@@ -22,6 +22,8 @@ class Settings {
               layoutMode = LayoutMode.HOLOFLIX;
             } else if (data[i+1].equals("RGBDTK")) {
               layoutMode = LayoutMode.RGBDTK;
+            }  else if (data[i+1].equals("OU")) {
+              layoutMode = LayoutMode.OU;
             }
         }
         if (data[i].equals("Render Mode")) {

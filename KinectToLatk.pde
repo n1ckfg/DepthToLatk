@@ -50,7 +50,11 @@ void setup() {
   } else if (layoutMode == LayoutMode.RGBDTK) {
     rgbImg = createImage(512, 424, RGB);
     depthImg = createImage(512, 424, RGB);
+  } else if (layoutMode == LayoutMode.OU) {
+    rgbImg = createImage(width, height/2, RGB);
+    depthImg = createImage(width, height/2, RGB);
   }
+  
   rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   
@@ -83,6 +87,9 @@ void draw() {
   } else if (layoutMode == LayoutMode.RGBDTK) {
     rgbImg = img.get(0, 0, 512, 424);
     depthImg = img.get(0, 424, 512, 424);
+  } else if (layoutMode == LayoutMode.OU) {
+    rgbImg = img.get(0, 0, img.width, img.height/2);
+    depthImg = img.get(0, img.height/2, img.width, img.height/2);
   }
   
   rgbBuffer.beginDraw();  
