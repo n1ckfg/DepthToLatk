@@ -13,10 +13,10 @@ Far Clip
 Stroke Length
 10
 
-Layout Mode
-OU
+Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)
+HOLOFLIX
 
-Render Mode
+Render Mode (GRID, CONTOUR)
 CONTOUR
 
 Grid Stroke Noise

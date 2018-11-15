@@ -17,16 +17,18 @@ class Settings {
         if (data[i].equals("Far Clip")) farClip = setFloat(data[i+1]);
         if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
 
-        if (data[i].equals("Layout Mode")) {
+        if (data[i].equals("Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)")) {
             if (data[i+1].equals("HOLOFLIX")) {
               layoutMode = LayoutMode.HOLOFLIX;
             } else if (data[i+1].equals("RGBDTK")) {
               layoutMode = LayoutMode.RGBDTK;
-            }  else if (data[i+1].equals("OU")) {
+            } else if (data[i+1].equals("OU")) {
               layoutMode = LayoutMode.OU;
+            } else if (data[i+1].equals("OU_EQR")) {
+              layoutMode = LayoutMode.OU_EQR;
             }
         }
-        if (data[i].equals("Render Mode")) {
+        if (data[i].equals("Render Mode (GRID, CONTOUR)")) {
             if (data[i+1].equals("GRID")) {
               renderMode = RenderMode.GRID;
             } else if (data[i+1].equals("CONTOUR")) {
