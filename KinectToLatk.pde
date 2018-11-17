@@ -35,6 +35,9 @@ boolean sampleDone = false;
 
 float[] depthLookUp = new float[2048];
 
+VertSphere vertSphere;
+int detail = 10;
+
 void setup() {
   size(640, 480, P2D);
   layoutMode = LayoutMode.HOLOFLIX;
@@ -50,7 +53,7 @@ void setup() {
   } else if (layoutMode == LayoutMode.RGBDTK) {
     rgbImg = createImage(512, 424, RGB);
     depthImg = createImage(512, 424, RGB);
-  } else if (layoutMode == LayoutMode.OU) {
+  } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR) {
     rgbImg = createImage(width, height/2, RGB);
     depthImg = createImage(width, height/2, RGB);
   }
@@ -87,9 +90,10 @@ void draw() {
   } else if (layoutMode == LayoutMode.RGBDTK) {
     rgbImg = img.get(0, 0, 512, 424);
     depthImg = img.get(0, 424, 512, 424);
-  } else if (layoutMode == LayoutMode.OU) {
+  } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR) {
     rgbImg = img.get(0, 0, img.width, img.height/2);
     depthImg = img.get(0, img.height/2, img.width, img.height/2);
+    if (layoutMode == LayoutMode.OU_EQR) vertSphere = new VertSphere(rgbImg, depthImg, detail);
   }
   
   rgbBuffer.beginDraw();  
