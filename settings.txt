@@ -16,15 +16,6 @@ Stroke Length
 Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)
 OU
 
-Render Mode (GRID, CONTOUR)
-CONTOUR
-
-Grid Stroke Noise
-0.4
-
-Grid Shuffle Odds
-0.2
-
 Contour Approximation
 0.05
 

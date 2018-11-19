@@ -28,16 +28,6 @@ class Settings {
               layoutMode = LayoutMode.OU_EQR;
             }
         }
-        if (data[i].equals("Render Mode (GRID, CONTOUR)")) {
-            if (data[i+1].equals("GRID")) {
-              renderMode = RenderMode.GRID;
-            } else if (data[i+1].equals("CONTOUR")) {
-              renderMode = RenderMode.CONTOUR;
-            }
-        }
-        
-        if (data[i].equals("Grid Stroke Noise")) strokeNoise = setFloat(data[i+1]);
-        if (data[i].equals("Grid Shuffle Odds")) shuffleOdds = setFloat(data[i+1]);
         
         if (data[i].equals("Contour Approximation")) approx = setFloat(data[i+1]);
         if (data[i].equals("Contour Min Area")) minArea = setFloat(data[i+1]);
