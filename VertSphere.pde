@@ -19,7 +19,6 @@ class VertSphere {
   float _Maximum = 303.65;
   
   VertSphere(PImage _rgb, PImage _depth) {
-    _mask = createI
     init(_rgb, _depth, whiteMask(_rgb));
   }
   
@@ -34,7 +33,7 @@ class VertSphere {
   }
   
   PImage whiteMask(PImage ref) {
-    PGraphics pg = createGraphics(ref.width, ref.height, P2D);
+    PGraphics pg = createGraphics(ref.width, ref.height, P3D);
     pg.beginDraw();
     pg.background(255);
     pg.endDraw();

@@ -3,6 +3,7 @@ import gab.opencv.*;
 Latk latk;
 PImage depthImg, rgbImg;
 PGraphics depthBuffer, rgbBuffer;
+PGraphics maskBuffer;
 String filePath = "render";
 LayoutMode layoutMode;
 
@@ -31,7 +32,7 @@ VertSphere vertSphere;
 int detail = 10;
 
 void setup() {
-  size(640, 480, P2D);
+  size(640, 480, P3D);
   layoutMode = LayoutMode.HOLOFLIX;
   
   settings = new Settings("settings.txt");
@@ -51,7 +52,9 @@ void setup() {
   
   rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
-  
+ 
+  maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
+
   imageMode(CORNER);
   rgbBuffer.imageMode(CORNER);
   depthBuffer.imageMode(CORNER);
@@ -111,15 +114,15 @@ void draw() {
     doContour(i);
   }
   
-  for (int i=0; i<contours.size(); i++) {
-    Contour contour = contours.get(i);
-    
-    if (contour.area() >= minArea) { 
-      ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
-      ArrayList<PVector> p = new ArrayList<PVector>();
-      PVector firstPoint = pOrig.get(0);
+  if (layoutMode != LayoutMode.OU_EQR) { 
+    for (int i=0; i<contours.size(); i++) {
+      Contour contour = contours.get(i);
       
-      if (layoutMode != LayoutMode.OU_EQR) {
+      if (contour.area() >= minArea) { 
+        ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+        ArrayList<PVector> p = new ArrayList<PVector>();
+        PVector firstPoint = pOrig.get(0);
+        
         color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
         
         for (int j=0; j<pOrig.size(); j++) {
@@ -137,29 +140,31 @@ void draw() {
             curStrokeLength = int(random(strokeLength/2, strokeLength*2));
           }
         }
-      } else {
-        vertSphere = new VertSphere(rgbImg, depthImg, detail);
-
-        // EQR contour version
-        color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
-        
+      }  
+    }
+  } else {
+    // EQR contour version
+    maskBuffer.beginDraw();
+    maskBuffer.background(0);
+    for (int i=0; i<contours.size(); i++) {
+      Contour contour = contours.get(i);
+      ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+      if (contour.area() >= minArea) {  
+        maskBuffer.stroke(255);
+        maskBuffer.strokeWeight(2);
+        maskBuffer.noFill();
+        maskBuffer.beginShape();
         for (int j=0; j<pOrig.size(); j++) {
-          PVector pt = pOrig.get(j);
-          float z = getZ(depthImg.pixels, pt.x, pt.y, depthImg.width);
-          if (z >= farClip) {
-            col = getColor(rgbImg.pixels, pt.x, pt.y, rgbImg.width);          
-            p.add(new PVector(pt.x / float(rgbImg.width), 1.0 - (pt.y / float(rgbImg.width)), 1.0 - (z / 255.0)));
-          }   
-        
-          if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
-            LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
-            frame.strokes.add(stroke);        
-            p = new ArrayList<PVector>();
-            curStrokeLength = int(random(strokeLength/2, strokeLength*2));
-          }
-        }      
+          PVector po = pOrig.get(j);
+          maskBuffer.vertex(po.x, po.y);
+        }
+        maskBuffer.endShape();
       }
-    }     
+    }
+    maskBuffer.endDraw();
+    maskBuffer.save("test.png");
+    
+    vertSphere = new VertSphere(rgbImg, depthImg, maskBuffer, detail);
   }
   
   latk.layers.get(0).frames.add(frame);

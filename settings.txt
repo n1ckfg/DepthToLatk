@@ -14,7 +14,7 @@ Stroke Length
 10
 
 Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)
-OU
+OU_EQR
 
 Contour Approximation
 0.05
