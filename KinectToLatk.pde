@@ -1,7 +1,5 @@
 import gab.opencv.*;
-//import peasy.PeasyCam;
 
-//PeasyCam cam;
 Latk latk;
 PImage depthImg, rgbImg;
 PGraphics depthBuffer, rgbBuffer;
@@ -58,16 +56,8 @@ void setup() {
   rgbBuffer.imageMode(CORNER);
   depthBuffer.imageMode(CORNER);
   
-  //for (int i = 0; i < depthLookUp.length; i++) {
-    //depthLookUp[i] = rawDepthToMeters(i);
-  //}
-
-  //cam = new PeasyCam(this, 100);
   latk = new Latk();  
-  //float fov = PI/3.0;
-  //float cameraZ = (height/2.0) / tan(fov/2.0);
-  //perspective(fov, float(width)/float(height), cameraZ/100.0, cameraZ*100.0);
-  
+
   setupShaders();
   fileSetup();
 }
@@ -86,7 +76,6 @@ void draw() {
   } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR) {
     rgbImg = img.get(0, 0, img.width, img.height/2);
     depthImg = img.get(0, img.height/2, img.width, img.height/2);
-    if (layoutMode == LayoutMode.OU_EQR) vertSphere = new VertSphere(rgbImg, depthImg, detail);
   }
   
   rgbBuffer.beginDraw();  
@@ -149,6 +138,8 @@ void draw() {
           }
         }
       } else {
+        vertSphere = new VertSphere(rgbImg, depthImg, detail);
+
         // EQR contour version
         color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
         

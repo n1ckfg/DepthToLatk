@@ -3,9 +3,11 @@ class VertSphere {
   PShape ps;
   PImage tex_rgb;
   PImage tex_depth;
+  PImage tex_mask;
   float normLineLength = 20;
   int detail = 15;
   int radius = 200;
+  int maskThreshold = 1;
   ArrayList<Vert> verts;
   color tintCol = color(255);
   boolean drawEndLines = false;
@@ -17,20 +19,37 @@ class VertSphere {
   float _Maximum = 303.65;
   
   VertSphere(PImage _rgb, PImage _depth) {
-    init(_rgb, _depth);
+    _mask = createI
+    init(_rgb, _depth, whiteMask(_rgb));
   }
   
   VertSphere(PImage _rgb, PImage _depth, int _detail) {
     detail = _detail;
-    init(_rgb, _depth);
+    init(_rgb, _depth, whiteMask(_rgb));
   }
   
-  void init(PImage _rgb, PImage _depth) {
-    sphereDetail(detail);
+  VertSphere(PImage _rgb, PImage _depth, PImage _mask, int _detail) {
+    detail = _detail;
+    init(_rgb, _depth, _mask);
+  }
+  
+  PImage whiteMask(PImage ref) {
+    PGraphics pg = createGraphics(ref.width, ref.height, P2D);
+    pg.beginDraw();
+    pg.background(255);
+    pg.endDraw();
+    return pg.get();
+  }
+  
+  void init(PImage _rgb, PImage _depth, PImage _mask) {    
     tex_rgb = _rgb;
     tex_depth = _depth;
+    tex_mask = _mask;
     tex_rgb.loadPixels();
     tex_depth.loadPixels();
+    tex_mask.loadPixels();
+
+    sphereDetail(detail);
     ps = createShape(SPHERE, radius);
     ps.setTexture(tex_rgb);  
     verts = initVerts(ps);
@@ -40,10 +59,13 @@ class VertSphere {
     ArrayList<Vert> returns = new ArrayList<Vert>();
     for (int i = 0 ; i < shape.getVertexCount(); i ++) {
       Vert v = new Vert(shape.getVertex(i));
-      v.col = getPixelFromUv(tex_rgb, v.uv);
-      v.depth = getPixelFromUv(tex_depth, v.uv);
-      v.co = reprojectEqr(v);
-      returns.add(v);
+      color maskCol = getPixelFromUv(tex_mask, v.uv);
+      if (red(maskCol) > maskThreshold) {
+        v.col = getPixelFromUv(tex_rgb, v.uv);
+        v.depth = getPixelFromUv(tex_depth, v.uv);
+        v.co = reprojectEqr(v);
+        returns.add(v);
+      }
     }
     return returns;
   }
