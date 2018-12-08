@@ -29,7 +29,7 @@ boolean sampleDone = false;
 float[] depthLookUp = new float[2048];
 
 VertSphere vertSphere;
-int detail = 10;
+int detail = 100;
 
 void setup() {
   size(640, 480, P3D);
@@ -165,6 +165,36 @@ void draw() {
     maskBuffer.save("test.png");
     
     vertSphere = new VertSphere(rgbImg, depthImg, maskBuffer, detail);
+    println("sphere verts: " + vertSphere.verts.size());
+    
+    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    
+    ArrayList<PVector> p = new ArrayList<PVector>();
+    color col = vertSphere.verts.get(0).col;
+    float w = float(vertSphere.tex_depth.width);
+    float h = float(vertSphere.tex_depth.height);
+    for (int i = 0; i < vertSphere.verts.size(); i++) { 
+      Vert v = vertSphere.verts.get(i);
+      float scaler = 1000.0;
+      float x = v.co.x / -scaler;
+      float y = v.co.y / -scaler;
+      float z = v.co.z / scaler;
+      PVector co = new PVector(x, y, z);
+      
+      float d = PVector.dist(co, new PVector(0,0,0));
+      //println("distance: " + d);
+      if (d < farClip) {
+        p.add(co);
+      }   
+      
+      if (p.size() > curStrokeLength) {
+        LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
+        frame.strokes.add(stroke);        
+        p = new ArrayList<PVector>();
+        col = vertSphere.verts.get(i).col;
+        curStrokeLength = int(random(strokeLength/2, strokeLength*2));
+      }
+    }
   }
   
   latk.layers.get(0).frames.add(frame);

@@ -24,3 +24,6 @@ Contour Min Area
 
 Contour Slices
 30
+
+Sphere Detail
+1000
