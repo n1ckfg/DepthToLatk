@@ -46,14 +46,14 @@ void setup() {
     rgbImg = createImage(512, 424, RGB);
     depthImg = createImage(512, 424, RGB);
   } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR) {
-    rgbImg = createImage(width, height/2, RGB);
-    depthImg = createImage(width, height/2, RGB);
+    //rgbImg = createImage(width, height/2, RGB);
+    //depthImg = createImage(width, height/2, RGB);
   }
   
   rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
  
-  maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
+  //maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
 
   imageMode(CORNER);
   rgbBuffer.imageMode(CORNER);
@@ -79,6 +79,7 @@ void draw() {
   } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR) {
     rgbImg = img.get(0, 0, img.width, img.height/2);
     depthImg = img.get(0, img.height/2, img.width, img.height/2);
+    maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
   }
   
   rgbBuffer.beginDraw();  
@@ -151,7 +152,7 @@ void draw() {
       ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
       if (contour.area() >= minArea) {  
         maskBuffer.stroke(255);
-        maskBuffer.strokeWeight(2);
+        maskBuffer.strokeWeight(1);
         maskBuffer.noFill();
         maskBuffer.beginShape();
         for (int j=0; j<pOrig.size(); j++) {
