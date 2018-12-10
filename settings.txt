@@ -8,7 +8,7 @@ Palette Colors
 64
 
 Far Clip
-1
+10
 
 Stroke Length
 10
@@ -17,13 +17,13 @@ Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)
 OU_EQR
 
 Contour Approximation
-0.05
+0.001
 
 Contour Min Area
-20.0
+100.0
 
 Contour Slices
-30
+10
 
 Sphere Detail
 1000
