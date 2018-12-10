@@ -28,8 +28,11 @@ boolean sampleDone = false;
 
 float[] depthLookUp = new float[2048];
 
-VertSphere vertSphere;
 int detail = 100;
+
+boolean firstTestMask = true;
+float rw, rh, dw, dh;
+VertSphere vertSphere;
 
 void setup() {
   size(640, 480, P3D);
@@ -147,32 +150,37 @@ void draw() {
   } else {
     // EQR contour version has deal differently with contour points
     // This is just to render a test image to evaluate contours
-    maskBuffer.beginDraw();
-    maskBuffer.background(0);
-    for (int i=0; i<contours.size(); i++) {
-      Contour contour = contours.get(i);
-      ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
-      if (contour.area() >= minArea) {  
-        maskBuffer.stroke(255);
-        maskBuffer.strokeWeight(1);
-        maskBuffer.noFill();
-        maskBuffer.beginShape();
-        for (int j=0; j<pOrig.size(); j++) {
-          PVector po = pOrig.get(j);
-          maskBuffer.vertex(po.x, po.y);
+    if (firstTestMask) {
+      maskBuffer.beginDraw();
+      maskBuffer.background(0);
+      for (int i=0; i<contours.size(); i++) {
+        Contour contour = contours.get(i);
+        ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+        if (contour.area() >= minArea) {  
+          maskBuffer.stroke(255);
+          maskBuffer.strokeWeight(1);
+          maskBuffer.noFill();
+          maskBuffer.beginShape();
+          for (int j=0; j<pOrig.size(); j++) {
+            PVector po = pOrig.get(j);
+            maskBuffer.vertex(po.x, po.y);
+          }
+          maskBuffer.endShape();
         }
-        maskBuffer.endShape();
       }
+      maskBuffer.endDraw();
+      maskBuffer.save("test.png");
+     
+      // ~ ~ ~
+      rw = float(rgbImg.width);
+      rh = float(rgbImg.height);
+      dw = float(depthImg.width);
+      dh = float(depthImg.height);
+      vertSphere = new VertSphere(rgbImg, depthImg);
+      // ~ ~ ~
+    
+      firstTestMask = false;
     }
-    maskBuffer.endDraw();
-    maskBuffer.save("test.png");
-    
-    float rw = float(rgbImg.width);
-    float rh = float(rgbImg.height);
-    float dw = float(depthImg.width);
-    float dh = float(depthImg.height);
-    
-    VertSphere vertSphere = new VertSphere(rgbImg, depthImg);
     
     for (int i=0; i<contours.size(); i++) {
       Contour contour = contours.get(i);
@@ -191,13 +199,13 @@ void draw() {
           Vert v = new Vert();
           v.co = v.getXyz(uv.x, uv.y);
           v.col = col;
-          v.depth = color(red(vertSphere.getPixelFromUv(depthImg, uv)));
+          v.depth = vertSphere.getPixelFromUv(depthImg, uv);
           v.n = v.co.copy().normalize();
           v.uv = uv;
           
           //if (v.co.z >= farClip) {
             col = vertSphere.getPixelFromUv(rgbImg, uv);  
-            p.add(vertSphere.reprojectEqr(v));
+            p.add(vertSphere.reprojectEqr(v).mult(0.0001));
           //}   
         
           if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
