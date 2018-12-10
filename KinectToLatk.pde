@@ -115,6 +115,7 @@ void draw() {
     doContour(i);
   }
   
+  // Non eqr mode uses contour points directly
   if (layoutMode != LayoutMode.OU_EQR) { 
     for (int i=0; i<contours.size(); i++) {
       Contour contour = contours.get(i);
@@ -144,7 +145,8 @@ void draw() {
       }  
     }
   } else {
-    // EQR contour version
+    // EQR contour version has deal differently with contour points
+    // This is just to render a test image to evaluate contours
     maskBuffer.beginDraw();
     maskBuffer.background(0);
     for (int i=0; i<contours.size(); i++) {
@@ -165,35 +167,46 @@ void draw() {
     maskBuffer.endDraw();
     maskBuffer.save("test.png");
     
-    vertSphere = new VertSphere(rgbImg, depthImg, maskBuffer, detail);
-    println("sphere verts: " + vertSphere.verts.size());
+    float rw = float(rgbImg.width);
+    float rh = float(rgbImg.height);
+    float dw = float(depthImg.width);
+    float dh = float(depthImg.height);
     
-    // ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    VertSphere vertSphere = new VertSphere(rgbImg, depthImg);
     
-    ArrayList<PVector> p = new ArrayList<PVector>();
-    color col = vertSphere.verts.get(0).col;
-    float w = float(vertSphere.tex_depth.width);
-    float h = float(vertSphere.tex_depth.height);
-    for (int i = 0; i < vertSphere.verts.size(); i++) { 
-      Vert v = vertSphere.verts.get(i);
-      float scaler = 1000.0;
-      float x = v.co.x / -scaler;
-      float y = v.co.y / -scaler;
-      float z = v.co.z / scaler;
-      PVector co = new PVector(x, y, z);
+    for (int i=0; i<contours.size(); i++) {
+      Contour contour = contours.get(i);
       
-      float d = PVector.dist(co, new PVector(0,0,0));
-      //println("distance: " + d);
-      if (d < farClip) {
-        p.add(co);
-      }   
-      
-      if (p.size() > curStrokeLength) {
-        LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
-        frame.strokes.add(stroke);        
-        p = new ArrayList<PVector>();
-        col = vertSphere.verts.get(i).col;
-        curStrokeLength = int(random(strokeLength/2, strokeLength*2));
+      if (contour.area() >= minArea) {  
+        ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+        ArrayList<PVector> p = new ArrayList<PVector>();
+        PVector firstPoint = pOrig.get(0);
+        
+        color col = vertSphere.getPixelFromUv(rgbImg, new PVector(firstPoint.x/rw, firstPoint.y/rh)); 
+        
+        for (int j=0; j<pOrig.size(); j++) {
+          PVector pt = pOrig.get(j);
+          PVector uv = new PVector(pt.x/rw, pt.y/rh);
+          
+          Vert v = new Vert();
+          v.co = v.getXyz(uv.x, uv.y);
+          v.col = col;
+          v.depth = color(red(vertSphere.getPixelFromUv(depthImg, uv)));
+          v.n = v.co.copy().normalize();
+          v.uv = uv;
+          
+          //if (v.co.z >= farClip) {
+            col = vertSphere.getPixelFromUv(rgbImg, uv);  
+            p.add(vertSphere.reprojectEqr(v));
+          //}   
+        
+          if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
+            LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
+            frame.strokes.add(stroke);        
+            p = new ArrayList<PVector>();
+            curStrokeLength = int(random(strokeLength/2, strokeLength*2));
+          }
+        }
       }
     }
   }
