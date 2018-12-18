@@ -7,8 +7,8 @@ Points High
 Palette Colors
 64
 
-Far Clip
-10
+Far Clip (Grayscale)
+127
 
 Stroke Length
 10
@@ -26,4 +26,4 @@ Contour Slices
 10
 
 Sphere Detail
-1000
+500

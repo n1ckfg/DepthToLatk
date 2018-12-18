@@ -31,6 +31,7 @@ float[] depthLookUp = new float[2048];
 int detail = 100;
 
 boolean firstTestMask = true;
+boolean debugMask = false;
 float rw, rh, dw, dh;
 VertSphere vertSphere;
 
@@ -151,25 +152,27 @@ void draw() {
     // EQR contour version has deal differently with contour points
     // This is just to render a test image to evaluate contours
     if (firstTestMask) {
-      maskBuffer.beginDraw();
-      maskBuffer.background(0);
-      for (int i=0; i<contours.size(); i++) {
-        Contour contour = contours.get(i);
-        ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
-        if (contour.area() >= minArea) {  
-          maskBuffer.stroke(255);
-          maskBuffer.strokeWeight(1);
-          maskBuffer.noFill();
-          maskBuffer.beginShape();
-          for (int j=0; j<pOrig.size(); j++) {
-            PVector po = pOrig.get(j);
-            maskBuffer.vertex(po.x, po.y);
+      if (debugMask) {
+        maskBuffer.beginDraw();
+        maskBuffer.background(0);
+        for (int i=0; i<contours.size(); i++) {
+          Contour contour = contours.get(i);
+          ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+          if (contour.area() >= minArea) {  
+            maskBuffer.stroke(255);
+            maskBuffer.strokeWeight(1);
+            maskBuffer.noFill();
+            maskBuffer.beginShape();
+            for (int j=0; j<pOrig.size(); j++) {
+              PVector po = pOrig.get(j);
+              maskBuffer.vertex(po.x, po.y);
+            }
+            maskBuffer.endShape();
           }
-          maskBuffer.endShape();
         }
+        maskBuffer.endDraw();
+        maskBuffer.save("test.png");
       }
-      maskBuffer.endDraw();
-      maskBuffer.save("test.png");
      
       // ~ ~ ~
       rw = float(rgbImg.width);
@@ -203,10 +206,10 @@ void draw() {
           v.n = v.co.copy().normalize();
           v.uv = uv;
           
-          //if (v.co.z >= farClip) {
+          if (255.0 - red(col) >= farClip) {
             col = vertSphere.getPixelFromUv(rgbImg, uv);  
             p.add(vertSphere.reprojectEqr(v).mult(0.0001));
-          //}   
+          }   
         
           if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
             LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));

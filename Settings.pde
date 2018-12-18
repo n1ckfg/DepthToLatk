@@ -14,7 +14,7 @@ class Settings {
         if (data[i].equals("Points Wide")) pointsWide = setInt(data[i+1]);
         if (data[i].equals("Points High")) pointsHigh = setInt(data[i+1]);
         if (data[i].equals("Palette Colors")) paletteColors = setInt(data[i+1]);
-        if (data[i].equals("Far Clip")) farClip = setFloat(data[i+1]);
+        if (data[i].equals("Far Clip (Grayscale)")) farClip = setFloat(data[i+1]);
         if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
         if (data[i].equals("Sphere Detail")) detail = setInt(data[i+1]);
 
