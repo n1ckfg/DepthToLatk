@@ -121,6 +121,7 @@ void saveGraphics(PGraphics pg,boolean last){
   }
   if(last) {
     //latk.write(new File(filePath, "output.latk").toString()); // bug, creates a folder inside zip
+    latk.layers.get(0).frames.remove(0);
     latk.write(new File("", "output.latk").toString());
     openAppFolderHandler();
     exit();
