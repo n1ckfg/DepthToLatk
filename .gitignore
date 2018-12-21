@@ -1,3 +1,6 @@
 /[Bb]uild/
 /[Rr]ender/
-test.png
+*.png
+*.latk
+*.json
+*.zip

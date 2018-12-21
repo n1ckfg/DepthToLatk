@@ -120,7 +120,8 @@ void saveGraphics(PGraphics pg,boolean last){
     println("Failed to save file.");  
   }
   if(last) {
-    latk.write(new File(filePath, "output.latk").toString());
+    //latk.write(new File(filePath, "output.latk").toString()); // bug, creates a folder inside zip
+    latk.write(new File("", "output.latk").toString());
     openAppFolderHandler();
     exit();
   }
