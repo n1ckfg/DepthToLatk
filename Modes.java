@@ -2,5 +2,6 @@ enum LayoutMode {
   HOLOFLIX,
   RGBDTK,
   OU,
-  OU_EQR
+  OU_EQR,
+  SBS
 }
