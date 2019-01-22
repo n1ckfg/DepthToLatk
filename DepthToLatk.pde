@@ -86,7 +86,7 @@ void draw() {
     maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
   } else if (layoutMode == LayoutMode.SBS) {
     rgbImg = img.get(0, 0, img.width/2, img.height);
-    depthImg = img.get(img.width/2, 0, img.width, img.height);
+    depthImg = img.get(img.width/2, 0, img.width/2, img.height);
     maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
   }
   
