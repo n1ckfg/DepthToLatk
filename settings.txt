@@ -13,8 +13,8 @@ Far Clip (Grayscale)
 Stroke Length
 10
 
-Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR)
-OU_EQR
+Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)
+SBS
 
 Contour Approximation
 0.001
