@@ -39,7 +39,7 @@ class Latk {
     layers.get(layers.size()-1).frames.add(new LatkFrame());
   }
   
-  Latk(ArrayList<PVector> _pts, color _c) {
+  Latk(ArrayList<LatkPoint> _pts, color _c) {
     layers = new ArrayList<LatkLayer>();
     layers.add(new LatkLayer());
     layers.get(layers.size()-1).frames.add(new LatkFrame());
@@ -169,11 +169,11 @@ class Latk {
             int b = int(255.0 * jsonStroke.getJSONArray("color").getFloat(2));
             color col = color(r,g,b);
             
-            ArrayList<PVector> pts = new ArrayList<PVector>();
+            ArrayList<LatkPoint> pts = new ArrayList<LatkPoint>();
             for (int m=0; m<jsonStroke.getJSONArray("points").size(); m++) {
               jsonPoint = (JSONObject) jsonStroke.getJSONArray("points").get(m);
-              PVector p = new PVector(jsonPoint.getJSONArray("co").getFloat(0), jsonPoint.getJSONArray("co").getFloat(1), jsonPoint.getJSONArray("co").getFloat(2));
-              pts.add(p);//.mult(globalScale));
+              PVector co = new PVector(jsonPoint.getJSONArray("co").getFloat(0), jsonPoint.getJSONArray("co").getFloat(1), jsonPoint.getJSONArray("co").getFloat(2));
+              pts.add(new LatkPoint(co));//.mult(globalScale));
             }
             
             LatkStroke st = new LatkStroke(pts, col);
@@ -215,14 +215,14 @@ class Latk {
                 if (layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size() > 0) {
                     sbb.add("\t\t\t\t\t\t\t\t\t\"points\":[");
                     for (int j = 0; j < layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size(); j++) {
-                        PVector pt = layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.get(j);
+                        PVector co = layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.get(j).co;
                         //pt.mult(1.0/globalScale);
                         
                         if (j == layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size() - 1) {
-                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + pt.x + ", " + pt.y + ", " + pt.z + "], \"pressure\":1, \"strength\":1}");
+                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + co.x + ", " + co.y + ", " + co.z + "], \"pressure\":1, \"strength\":1}");
                             sbb.add("\t\t\t\t\t\t\t\t\t]");
                         } else {
-                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + pt.x + ", " + pt.y + ", " + pt.z + "], \"pressure\":1, \"strength\":1},");
+                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + co.x + ", " + co.y + ", " + co.z + "], \"pressure\":1, \"strength\":1},");
                         }
                     }
                 } else {
@@ -318,8 +318,8 @@ class Latk {
           } else {
             float totalLength = 0.0;
             for (int l=1; l<stroke.points.size(); l++) {
-              PVector p1 = stroke.points.get(l);
-              PVector p2 = stroke.points.get(l-1);
+              PVector p1 = stroke.points.get(l).co;
+              PVector p2 = stroke.points.get(l-1).co;
               // 2. Remove the point if it's a duplicate.
               if (hitDetect3D(p1, p2, 0.1)) {
                 stroke.points.remove(l);
@@ -407,16 +407,16 @@ class LatkFrame {
 class LatkStroke {
   
   PShape s;
-  ArrayList<PVector> points;
+  ArrayList<LatkPoint> points;
   color col = color(255);
   float globalScale = 1;
   PVector globalOffset = new PVector(0,0,0);
-    
-  LatkStroke(ArrayList<PVector> _p, color _c) {
+
+  LatkStroke(ArrayList<LatkPoint> _p, color _c) {
     init(_p, _c);
   }
-
-  void init(ArrayList<PVector> _p, color _c) {
+  
+  void init(ArrayList<LatkPoint> _p, color _c) {
     setColor(_c);
     setPoints(_p);
   }
@@ -443,22 +443,22 @@ class LatkStroke {
     col = _c;
   }
   
-  ArrayList<PVector> getPoints() {
-    ArrayList<PVector> points = new ArrayList<PVector>();
+  ArrayList<LatkPoint> getPoints() {
+    ArrayList<LatkPoint> points = new ArrayList<LatkPoint>();
     for (int i=0; i<s.getVertexCount(); i++) {
-      points.add(s.getVertex(i));
+      points.add(new LatkPoint(s.getVertex(i)));
     }
     return points;
   }
   
-  void setPoints(ArrayList<PVector> _p) {
+  void setPoints(ArrayList<LatkPoint> _p) {
     s = createShape();
     s.beginShape();
     s.noFill();
     s.stroke(col);
     s.strokeWeight(2);
     for (int i=0; i<_p.size(); i++) {
-      PVector pt = _p.get(i);
+      PVector pt = _p.get(i).co;
       s.vertex(pt.z, -pt.y, pt.x);
     }
     s.endShape();
@@ -470,11 +470,39 @@ class LatkStroke {
 class LatkPoint {
 
   PVector co;
-  float pressure
+  float pressure;
   float strength;
   color vertex_color;
+
+  LatkPoint() {
+    co = new PVector(0,0,0);
+    pressure = 1.0;
+    strength = 1.0;
+    vertex_color = color(0,0,0,0);
+  }
   
-  LatkPoint(PVector _co, float pressure, float strength, color _vertex_color) {
+  LatkPoint(PVector _co) {
+    co = _co;
+    pressure = 1.0;
+    strength = 1.0;
+    vertex_color = color(0,0,0,0);
+  }
+  
+  LatkPoint(PVector _co, color _vertex_color) {
+    co = _co;
+    pressure = 1.0;
+    strength = 1.0;
+    vertex_color = _vertex_color;
+  }
+  
+  LatkPoint(PVector _co, float _pressure, float _strength) {
+    co = _co;
+    pressure = _pressure;
+    strength = _strength;
+    vertex_color = color(0,0,0,0);
+  } 
+ 
+  LatkPoint(PVector _co, float _pressure, float _strength, color _vertex_color) {
     co = _co;
     pressure = _pressure;
     strength = _strength;

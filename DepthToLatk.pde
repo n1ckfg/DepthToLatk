@@ -147,7 +147,11 @@ void draw() {
           }   
         
           if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
-            LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
+            ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
+            for (int k=0; k<p.size(); k++) {
+              p2.add(new LatkPoint(p.get(k)));
+            }
+            LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
             frame.strokes.add(stroke);        
             p = new ArrayList<PVector>();
             curStrokeLength = int(random(strokeLength/2, strokeLength*2));
@@ -219,7 +223,11 @@ void draw() {
           }   
         
           if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
-            LatkStroke stroke = new LatkStroke(p, palette.getNearest(col));
+            ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
+            for (int k=0; k<p.size(); k++) {
+              p2.add(new LatkPoint(p.get(k)));
+            }
+            LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
             frame.strokes.add(stroke);        
             p = new ArrayList<PVector>();
             curStrokeLength = int(random(strokeLength/2, strokeLength*2));
