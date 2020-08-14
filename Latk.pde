@@ -466,3 +466,19 @@ class LatkStroke {
   }
 
 }
+
+class LatkPoint {
+
+  PVector co;
+  float pressure
+  float strength;
+  color vertex_color;
+  
+  LatkPoint(PVector _co, float pressure, float strength, color _vertex_color) {
+    co = _co;
+    pressure = _pressure;
+    strength = _strength;
+    vertex_color = _vertex_color;
+  }
+  
+}
