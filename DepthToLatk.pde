@@ -134,6 +134,7 @@ void draw() {
       if (contour.area() >= minArea) { 
         ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
         ArrayList<PVector> p = new ArrayList<PVector>();
+        ArrayList<Integer> cols = new ArrayList<Integer>();
         PVector firstPoint = pOrig.get(0);
         
         color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
@@ -142,14 +143,17 @@ void draw() {
           PVector pt = pOrig.get(j);
           float z = getZ(depthImg.pixels, pt.x, pt.y, depthImg.width);
           if (z >= farClip) {
-            col = getColor(rgbImg.pixels, pt.x, pt.y, rgbImg.width);          
+            col = getColor(depthImg.pixels, pt.x, pt.y, depthImg.width);    
+            cols.add(col);
             p.add(new PVector(pt.x / float(rgbImg.width), 1.0 - (pt.y / float(rgbImg.width)), 1.0 - (z / 255.0)));
           }   
         
           if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
             ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
             for (int k=0; k<p.size(); k++) {
-              p2.add(new LatkPoint(p.get(k)));
+              color c1 = cols.get(k);
+              color c2 = color(red(c1), green(c1), blue(c1), 255);
+              p2.add(new LatkPoint(p.get(k), c2));
             }
             LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
             frame.strokes.add(stroke);        

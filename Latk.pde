@@ -207,22 +207,30 @@ class Latk {
                 ArrayList<String> sbb = new ArrayList<String>();
                 sbb.add("\t\t\t\t\t\t\t\t{");
                 color col = layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).col;
-                float r = rounder(red(col) / 255.0, 5);
-                float g = rounder(green(col) / 255.0, 5);
-                float b = rounder(blue(col) / 255.0, 5);
-                sbb.add("\t\t\t\t\t\t\t\t\t\"color\":[" + r + ", " + g + ", " + b + "],");
+                float r1 = red(col)/255.0; //rounder(red(col) / 255.0, 5);
+                float g1 = green(col)/255.0;
+                float b1 = blue(col)/255.0;
+                sbb.add("\t\t\t\t\t\t\t\t\t\"color\":[" + r1 + ", " + g1 + ", " + b1 + "],");
 
                 if (layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size() > 0) {
                     sbb.add("\t\t\t\t\t\t\t\t\t\"points\":[");
                     for (int j = 0; j < layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size(); j++) {
-                        PVector co = layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.get(j).co;
+                        LatkPoint lp = layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.get(j);
+                        PVector co = lp.co;
+                        color vertex_color = lp.vertex_color;
                         //pt.mult(1.0/globalScale);
                         
+                        float r = red(vertex_color)/255.0;
+                        float g = green(vertex_color)/255.0;
+                        float b = blue(vertex_color)/255.0;
+                        float a = 1.0;
+                        String pointString = "\t\t\t\t\t\t\t\t\t\t{\"co\":[" + co.x + ", " + co.y + ", " + co.z + "], \"pressure\":1, \"strength\":1, \"vertex_color\":[" + r + ", " + g + ", " + b + ", " + a + "]}";
+
                         if (j == layers.get(currentLayer).frames.get(layers.get(currentLayer).currentFrame).strokes.get(i).points.size() - 1) {
-                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + co.x + ", " + co.y + ", " + co.z + "], \"pressure\":1, \"strength\":1}");
+                            sbb.add(pointString);
                             sbb.add("\t\t\t\t\t\t\t\t\t]");
                         } else {
-                            sbb.add("\t\t\t\t\t\t\t\t\t\t{\"co\":[" + co.x + ", " + co.y + ", " + co.z + "], \"pressure\":1, \"strength\":1},");
+                            sbb.add(pointString + ",");
                         }
                     }
                 } else {
