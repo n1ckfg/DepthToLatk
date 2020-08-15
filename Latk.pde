@@ -263,6 +263,7 @@ class Latk {
     ArrayList<String> s = new ArrayList<String>();
     s.add("{");
     s.add("\t\"creator\": \"processing\",");
+    s.add("\t\"version\": 2.8,");
     s.add("\t\"grease_pencil\":[");
     s.add("\t\t{");
     s.add("\t\t\t\"layers\":[");
@@ -451,6 +452,7 @@ class LatkStroke {
     col = _c;
   }
   
+  /*
   ArrayList<LatkPoint> getPoints() {
     ArrayList<LatkPoint> points = new ArrayList<LatkPoint>();
     for (int i=0; i<s.getVertexCount(); i++) {
@@ -458,6 +460,7 @@ class LatkStroke {
     }
     return points;
   }
+  */
   
   void setPoints(ArrayList<LatkPoint> _p) {
     s = createShape();

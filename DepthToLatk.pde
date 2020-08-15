@@ -143,7 +143,7 @@ void draw() {
           PVector pt = pOrig.get(j);
           float z = getZ(depthImg.pixels, pt.x, pt.y, depthImg.width);
           if (z >= farClip) {
-            col = getColor(depthImg.pixels, pt.x, pt.y, depthImg.width);    
+            col = getColor(rgbImg.pixels, pt.x, pt.y, rgbImg.width);    
             cols.add(col);
             p.add(new PVector(pt.x / float(rgbImg.width), 1.0 - (pt.y / float(rgbImg.width)), 1.0 - (z / 255.0)));
           }   
