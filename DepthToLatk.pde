@@ -181,7 +181,7 @@ void draw() {
             p.add(new PVector(float(x) / float(rgbImg.width), 1.0 - (float(y) / float(rgbImg.width)), 1.0 - (z / 255.0)));
           }   
         
-          if (p.size() > curStrokeLength)) {
+          if (p.size() > curStrokeLength) {
             ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
             for (int k=0; k<p.size(); k++) {
               color c1 = cols.get(k);
@@ -191,6 +191,7 @@ void draw() {
             LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
             frame.strokes.add(stroke);        
             p = new ArrayList<PVector>();
+            cols = new ArrayList<Integer>();
             curStrokeLength = int(random(strokeLength/2, strokeLength*2));
           }
         }
