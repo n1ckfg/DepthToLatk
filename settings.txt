@@ -17,7 +17,7 @@ Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)
 HOLOFLIX
 
 Vector Mode (ROWS, CONTOURS)
-ROWS
+CONTOURS
 
 Row Resolution
 4
