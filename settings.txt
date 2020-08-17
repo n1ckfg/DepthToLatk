@@ -17,10 +17,10 @@ Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)
 HOLOFLIX
 
 Vector Mode (ROWS, CONTOURS)
-CONTOURS
+ROWS
 
 Row Resolution
-3
+4
 
 Contour Approximation
 0.001

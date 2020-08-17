@@ -170,7 +170,7 @@ void draw() {
     } else if (vectorMode == VectorMode.ROWS) {
       for (int y=0; y<rgbImg.height; y+=rowResolution) {      
         ArrayList<Integer> cols = new ArrayList<Integer>();
-        color col = color(255,0,0);//getColor(rgbImg.pixels, rgbImg.width/2, rgbImg.height/2, rgbImg.width);  
+        color col = getColor(rgbImg.pixels, rgbImg.width/2, rgbImg.height/2, rgbImg.width);  
         ArrayList<PVector> p = new ArrayList<PVector>();
         
         for (int x=0; x<rgbImg.width; x+=rowResolution) {
@@ -181,7 +181,7 @@ void draw() {
             p.add(new PVector(float(x) / float(rgbImg.width), 1.0 - (float(y) / float(rgbImg.width)), 1.0 - (z / 255.0)));
           }   
         
-          if (p.size() > curStrokeLength) {
+          if (p.size() > curStrokeLength)) {
             ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
             for (int k=0; k<p.size(); k++) {
               color c1 = cols.get(k);
