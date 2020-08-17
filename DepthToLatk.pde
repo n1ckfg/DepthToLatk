@@ -6,6 +6,8 @@ PGraphics depthBuffer, rgbBuffer;
 PGraphics maskBuffer;
 String filePath = "render";
 LayoutMode layoutMode;
+VectorMode vectorMode;
+int rowResolution = 2;
 
 int pointsWide = 128;
 int pointsHigh = 96;
@@ -38,6 +40,7 @@ VertSphere vertSphere;
 void setup() {
   size(640, 480, P3D);
   layoutMode = LayoutMode.HOLOFLIX;
+  vectorMode = VectorMode.CONTOURS;
   
   settings = new Settings("settings.txt");
   
@@ -127,28 +130,58 @@ void draw() {
   }
   
   // Non eqr mode uses contour points directly
-  if (layoutMode != LayoutMode.OU_EQR) { 
-    for (int i=0; i<contours.size(); i++) {
-      Contour contour = contours.get(i);
-      
-      if (contour.area() >= minArea) { 
-        ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
-        ArrayList<PVector> p = new ArrayList<PVector>();
+  if (layoutMode != LayoutMode.OU_EQR) {
+    if (vectorMode == VectorMode.CONTOURS) {
+      for (int i=0; i<contours.size(); i++) {
+        Contour contour = contours.get(i);
+        
+        if (contour.area() >= minArea) { 
+          ArrayList<PVector> pOrig = contour.getPolygonApproximation().getPoints();
+          ArrayList<PVector> p = new ArrayList<PVector>();
+          ArrayList<Integer> cols = new ArrayList<Integer>();
+          PVector firstPoint = pOrig.get(0);
+          
+          color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
+          
+          for (int j=0; j<pOrig.size(); j++) {
+            PVector pt = pOrig.get(j);
+            float z = getZ(depthImg.pixels, pt.x, pt.y, depthImg.width);
+            if (z >= farClip) {
+              col = getColor(rgbImg.pixels, pt.x, pt.y, rgbImg.width);    
+              cols.add(col);
+              p.add(new PVector(pt.x / float(rgbImg.width), 1.0 - (pt.y / float(rgbImg.width)), 1.0 - (z / 255.0)));
+            }   
+          
+            if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
+              ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
+              for (int k=0; k<p.size(); k++) {
+                color c1 = cols.get(k);
+                color c2 = color(red(c1), green(c1), blue(c1), 255);
+                p2.add(new LatkPoint(p.get(k), c2));
+              }
+              LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
+              frame.strokes.add(stroke);        
+              p = new ArrayList<PVector>();
+              curStrokeLength = int(random(strokeLength/2, strokeLength*2));
+            }
+          }
+        }  
+      }
+    } else if (vectorMode == VectorMode.ROWS) {
+      for (int y=0; y<rgbImg.height; y+=rowResolution) {      
         ArrayList<Integer> cols = new ArrayList<Integer>();
-        PVector firstPoint = pOrig.get(0);
+        color col = color(255,0,0);//getColor(rgbImg.pixels, rgbImg.width/2, rgbImg.height/2, rgbImg.width);  
+        ArrayList<PVector> p = new ArrayList<PVector>();
         
-        color col = getColor(rgbImg.pixels, firstPoint.x, firstPoint.y, rgbImg.width); 
-        
-        for (int j=0; j<pOrig.size(); j++) {
-          PVector pt = pOrig.get(j);
-          float z = getZ(depthImg.pixels, pt.x, pt.y, depthImg.width);
+        for (int x=0; x<rgbImg.width; x+=rowResolution) {
+          float z = getZ(depthImg.pixels, float(x), float(y), depthImg.width);
           if (z >= farClip) {
-            col = getColor(rgbImg.pixels, pt.x, pt.y, rgbImg.width);    
+            col = getColor(rgbImg.pixels, float(x), float(y), rgbImg.width);    
             cols.add(col);
-            p.add(new PVector(pt.x / float(rgbImg.width), 1.0 - (pt.y / float(rgbImg.width)), 1.0 - (z / 255.0)));
+            p.add(new PVector(float(x) / float(rgbImg.width), 1.0 - (float(y) / float(rgbImg.width)), 1.0 - (z / 255.0)));
           }   
         
-          if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
+          if (p.size() > curStrokeLength) {
             ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
             for (int k=0; k<p.size(); k++) {
               color c1 = cols.get(k);
@@ -161,7 +194,7 @@ void draw() {
             curStrokeLength = int(random(strokeLength/2, strokeLength*2));
           }
         }
-      }  
+      }      
     }
   } else {
     // EQR contour version has deal differently with contour points

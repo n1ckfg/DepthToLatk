@@ -32,6 +32,15 @@ class Settings {
             }
         }
         
+        if (data[i].equals("Vector Mode (ROWS, CONTOURS)")) {
+            if (data[i+1].equals("ROWS")) {
+              vectorMode = VectorMode.ROWS;
+            } else if (data[i+1].equals("CONTOURS")) {
+              vectorMode = VectorMode.CONTOURS;
+            }
+        }
+        
+        if (data[i].equals("Row Resolution")) rowResolution = setInt(data[i+1]);
         if (data[i].equals("Contour Approximation")) approx = setFloat(data[i+1]);
         if (data[i].equals("Contour Min Area")) minArea = setFloat(data[i+1]);
         if (data[i].equals("Contour Slices")) numSlices = setInt(data[i+1]);          

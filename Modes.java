@@ -5,3 +5,8 @@ enum LayoutMode {
   OU_EQR,
   SBS
 }
+
+enum VectorMode {
+  ROWS,
+  CONTOURS
+}

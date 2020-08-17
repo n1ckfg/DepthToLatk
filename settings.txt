@@ -8,13 +8,19 @@ Palette Colors
 64
 
 Far Clip (Grayscale)
-127
+0
 
 Stroke Length
 10
 
 Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)
 HOLOFLIX
+
+Vector Mode (ROWS, CONTOURS)
+CONTOURS
+
+Row Resolution
+3
 
 Contour Approximation
 0.001
