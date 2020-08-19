@@ -32,7 +32,7 @@ void fileLoop() {
   }
 }
 
-void chooseFileDialog(){
+void chooseFileDialog() {
     selectInput("Choose a PNG, JPG, GIF, or TGA file.","chooseFileCallback");  
 }
 
@@ -47,7 +47,7 @@ void chooseFileCallback(File selection){
     }
 }
 
-void chooseFolderDialog(){
+void chooseFolderDialog() {
     selectFolder("Choose a PNG, JPG, GIF, or TGA sequence.","chooseFolderCallback");
 }
 
