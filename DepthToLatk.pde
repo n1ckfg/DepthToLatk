@@ -1,4 +1,5 @@
 import gab.opencv.*;
+import latkProcessing.*;
 
 Latk latk;
 PImage depthImg, rgbImg;
@@ -68,7 +69,7 @@ void setup() {
   rgbBuffer.imageMode(CORNER);
   depthBuffer.imageMode(CORNER);
   
-  latk = new Latk();  
+  latk = new Latk(this);  
 
   setupShaders();
 }
@@ -125,7 +126,7 @@ void draw() {
     image(rgbBuffer,0,0);
     image(depthBuffer,rgbBuffer.width,0);
     
-    LatkFrame frame = new LatkFrame();
+    LatkFrame frame = new LatkFrame(this);
     
     contours = new ArrayList<Contour>();
     opencv = new OpenCV(this, rgbImg);
@@ -161,9 +162,9 @@ void draw() {
                 for (int k=0; k<p.size(); k++) {
                   color c1 = cols.get(k);
                   color c2 = color(red(c1), green(c1), blue(c1), 255);
-                  p2.add(new LatkPoint(p.get(k), c2));
+                  p2.add(new LatkPoint(this, p.get(k), c2));
                 }
-                LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
+                LatkStroke stroke = new LatkStroke(this, p2, palette.getNearest(col));
                 frame.strokes.add(stroke);        
                 p = new ArrayList<PVector>();
                 curStrokeLength = int(random(strokeLength/2, strokeLength*2));
@@ -190,9 +191,9 @@ void draw() {
               for (int k=0; k<p.size(); k++) {
                 color c1 = cols.get(k);
                 color c2 = color(red(c1), green(c1), blue(c1), 255);
-                p2.add(new LatkPoint(p.get(k), c2));
+                p2.add(new LatkPoint(this, p.get(k), c2));
               }
-              LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
+              LatkStroke stroke = new LatkStroke(this, p2, palette.getNearest(col));
               frame.strokes.add(stroke);        
               p = new ArrayList<PVector>();
               cols = new ArrayList<Integer>();
@@ -267,9 +268,9 @@ void draw() {
             if (p.size() > curStrokeLength || (j > pOrig.size()-1 && p.size() > 0)) {
               ArrayList<LatkPoint> p2 = new ArrayList<LatkPoint>();
               for (int k=0; k<p.size(); k++) {
-                p2.add(new LatkPoint(p.get(k)));
+                p2.add(new LatkPoint(this, p.get(k)));
               }
-              LatkStroke stroke = new LatkStroke(p2, palette.getNearest(col));
+              LatkStroke stroke = new LatkStroke(this, p2, palette.getNearest(col));
               frame.strokes.add(stroke);        
               p = new ArrayList<PVector>();
               curStrokeLength = int(random(strokeLength/2, strokeLength*2));
