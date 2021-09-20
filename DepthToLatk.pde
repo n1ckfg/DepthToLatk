@@ -55,10 +55,10 @@ void setup() {
   } else if (layoutMode == LayoutMode.RGBDTK) {
     rgbImg = createImage(512, 424, RGB);
     depthImg = createImage(512, 424, RGB);
-  } else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR || layoutMode == LayoutMode.SBS) {
+  } //else if (layoutMode == LayoutMode.OU || layoutMode == LayoutMode.OU_EQR || layoutMode == LayoutMode.SBS) {
     //rgbImg = createImage(width, height/2, RGB);
     //depthImg = createImage(width, height/2, RGB);
-  }
+  //}
   
   rgbBuffer = createGraphics(pointsWide, pointsHigh, P2D);
   depthBuffer = createGraphics(pointsWide, pointsHigh, P2D);
@@ -95,6 +95,10 @@ void draw() {
     } else if (layoutMode == LayoutMode.SBS) {
       rgbImg = img.get(0, 0, img.width/2, img.height);
       depthImg = img.get(img.width/2, 0, img.width/2, img.height);
+      maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
+    } else if (layoutMode == LayoutMode.SINGLE) {
+      rgbImg = img.get(0, 0, img.width, img.height);
+      depthImg = img.get(0, 0, img.width, img.height);
       maskBuffer = createGraphics(rgbImg.width, rgbImg.height, P3D);
     }
     

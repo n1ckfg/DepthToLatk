@@ -90,6 +90,7 @@ void countFrames(String usePath) {
         s = "images";
       }
       println("FOUND " + imgNames.size() + " " + s);
+      Collections.sort(imgNames);
       filesLoaded = true;
   }
 }

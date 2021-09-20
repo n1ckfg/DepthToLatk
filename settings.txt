@@ -13,8 +13,8 @@ Far Clip (Grayscale)
 Stroke Length
 10
 
-Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)
-HOLOFLIX
+Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS, SINGLE)
+SINGLE
 
 Vector Mode (ROWS, CONTOURS)
 CONTOURS
@@ -23,7 +23,7 @@ Row Resolution
 4
 
 Contour Approximation
-0.001
+0.01
 
 Contour Min Area
 100.0

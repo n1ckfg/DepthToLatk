@@ -3,7 +3,8 @@ enum LayoutMode {
   RGBDTK,
   OU,
   OU_EQR,
-  SBS
+  SBS,
+  SINGLE
 }
 
 enum VectorMode {

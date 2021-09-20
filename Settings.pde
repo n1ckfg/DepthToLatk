@@ -18,7 +18,7 @@ class Settings {
         if (data[i].equals("Stroke Length")) strokeLength = setInt(data[i+1]);
         if (data[i].equals("Sphere Detail")) detail = setInt(data[i+1]);
 
-        if (data[i].equals("Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS)")) {
+        if (data[i].equals("Layout Mode (HOLOFLIX, RGBDTK, OU, OU_EQR, SBS, SINGLE)")) {
             if (data[i+1].equals("HOLOFLIX")) {
               layoutMode = LayoutMode.HOLOFLIX;
             } else if (data[i+1].equals("RGBDTK")) {
@@ -29,6 +29,8 @@ class Settings {
               layoutMode = LayoutMode.OU_EQR;
             } else if (data[i+1].equals("SBS")) {
               layoutMode = LayoutMode.SBS;
+            } else if (data[i+1].equals("SINGLE")) {
+              layoutMode = LayoutMode.SINGLE;
             }
         }
         
