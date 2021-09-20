@@ -11,6 +11,7 @@ class Settings {
     try {
       data = loadStrings(_s);
       for (int i=0;i<data.length;i++) {
+        if (data[i].equals("Max Frame Count")) maxFrameCount = setInt(data[i+1]);
         if (data[i].equals("Points Wide")) pointsWide = setInt(data[i+1]);
         if (data[i].equals("Points High")) pointsHigh = setInt(data[i+1]);
         if (data[i].equals("Palette Colors")) paletteColors = setInt(data[i+1]);

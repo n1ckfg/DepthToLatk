@@ -1,3 +1,6 @@
+Max Frame Count
+300
+
 Points Wide
 100
 

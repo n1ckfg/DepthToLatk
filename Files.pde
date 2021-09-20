@@ -23,12 +23,19 @@ void filesLoadedChecker() {
 
 void fileLoop() {
   if (counter<imgNames.size()-1) {
-    saveGraphics(targetImg, false); //don't exit
+    if (counter % maxFrameCount == 0) {
+      if (outputCounter >= 1) {      
+        saveGraphics(targetImg, true, false); // write, don't exit
+      }
+      outputCounter++;
+    } else {
+      saveGraphics(targetImg, false, false); // don't write, don't exit
+    }
     counter++;
     nextImage(counter);
     prepGraphics();
   } else {
-    saveGraphics(targetImg, true); //exit
+    saveGraphics(targetImg, true, true); // write and exit
   }
 }
 
@@ -131,20 +138,22 @@ void scriptsFolderHandler() {
   }
 }
 
-void saveGraphics(PGraphics pg,boolean last) {
+void saveGraphics(PGraphics pg, boolean write, boolean last) {
   try {
     String savePath = openFilePath + "/" + fileName + "_" + zeroPadding(counter+1,imgNames.size()) + ".png";
-    //pg.save(savePath); 
     println("SAVED " + savePath);
   } catch (Exception e) {
     println("Failed to save file.");  
   }
-  if(last) {
-    //latk.write(new File(filePath, "output.latk").toString()); // bug, creates a folder inside zip
+  if(write) {
     latk.layers.get(0).frames.remove(0); // bugfix, removes extra blank frame at start
-    latk.write("render/output.latk");
-    openAppFolderHandler();
-    exit();
+    latk.write("render/output" + zeroPadding(outputCounter, 100) + ".latk");
+    if (last) {
+      openAppFolderHandler();
+      exit();
+    } else {
+      latk = new Latk(this);
+    }
   }
 }
 

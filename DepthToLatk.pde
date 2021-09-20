@@ -38,6 +38,9 @@ boolean debugMask = false;
 float rw, rh, dw, dh;
 VertSphere vertSphere;
 
+int maxFrameCount = 99999;
+int outputCounter = 0;
+
 void setup() {
   size(640, 480, P3D);
   chooseFolderDialog();
